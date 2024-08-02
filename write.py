@@ -29,7 +29,20 @@ def write_to_csv(results, filename):
         'designation', 'name', 'diameter_km', 'potentially_hazardous'
     )
     # TODO: Write the results to a CSV file, following the specification in the instructions.
-
+    with open(filename, 'w') as outfile:
+        writer = csv.DictWriter(outfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for i in results:
+            row_obj = {
+                'datetime_utc': i.time_str,
+                'distance_au': i.distance,
+                'velocity_km_s': i.velocity,
+                'designation': i._designation,
+                'name': i.neo.name if i.neo.name else '',
+                'diameter_km': i.neo.diameter if i.neo.diameter else '',
+                'potentially_hazardous': 'true' if i.neo.hazardous else 'nalse'
+            }
+            writer.writerow(row_obj)
 
 def write_to_json(results, filename):
     """Write an iterable of `CloseApproach` objects to a JSON file.
@@ -43,3 +56,19 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    with open(filename, 'w') as outfile:
+        available = []
+        for i in results:
+            tmp = {
+                    'datetime_utc': i.time_str,
+                    'distance_au': i.distance,
+                    'velocity_km_s': i.velocity,
+                    'neo': {
+                        'designation': i.neo.designation,
+                        'name': i.neo.name if i.neo.name else '',
+                        'diameter_km': i.neo.diameter if i.neo.diameter else float('nan'),
+                        'potentially_hazardous': i.neo.hazardous
+                    }
+                }
+            available.append(tmp)
+        json.dump(available, outfile, indent=2)
