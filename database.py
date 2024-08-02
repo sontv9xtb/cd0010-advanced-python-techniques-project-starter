@@ -1,4 +1,5 @@
-"""A database encapsulating collections of near-Earth objects and their close approaches.
+"""A database encapsulating collections of near-Earth objects and their
+close approaches.
 
 A `NEODatabase` holds an interconnected data set of NEOs and close approaches.
 It provides methods to fetch an NEO by primary designation or by name, as well
@@ -21,20 +22,23 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
-        As a precondition, this constructor assumes that the collections of NEOs
+        As a precondition, this constructor assumes that the collections of
+        NEOs
         and close approaches haven't yet been linked - that is, the
         `.approaches` attribute of each `NearEarthObject` resolves to an empty
         collection, and the `.neo` attribute of each `CloseApproach` is None.
 
         However, each `CloseApproach` has an attribute (`._designation`) that
         matches the `.designation` attribute of the corresponding NEO. This
-        constructor modifies the supplied NEOs and close approaches to link them
+        constructor modifies the supplied NEOs and close approaches to link
+        them
         together - after it's done, the `.approaches` attribute of each NEO has
-        a collection of that NEO's close approaches, and the `.neo` attribute of
-        each close approach references the appropriate NEO.
+        a collection of that NEO's close approaches, and the `.neo` attribute
+        of each close approach references the appropriate NEO.
 
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
@@ -42,7 +46,6 @@ class NEODatabase:
         self._neos = neos
         self._approaches = approaches
 
-        # TODO: What additional auxiliary data structures will be useful?
         for approach in self._approaches:
             neo_tmp = self.get_neo_by_designation(approach._designation)
             if neo_tmp:
@@ -60,9 +63,9 @@ class NEODatabase:
         match is found.
 
         :param designation: The primary designation of the NEO to search for.
-        :return: The `NearEarthObject` with the desired primary designation, or `None`.
+        :return: The `NearEarthObject` with the desired primary
+        designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.
         for item in self._neos:
             if designation is not None and designation == item.designation:
                 return item
@@ -82,27 +85,28 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        # TODO: Fetch an NEO by its name.
         for item in self._neos:
             if name is not None and name == item.name:
                 return item
         return None
 
     def query(self, filters=()):
-        """Query close approaches to generate those that match a collection of filters.
+        """Query close approaches to generate those that match a collection
+        of filters.
 
-        This generates a stream of `CloseApproach` objects that match all of the
-        provided filters.
+        This generates a stream of `CloseApproach` objects that match all
+        of the provided filters.
 
         If no arguments are provided, generate all known close approaches.
 
-        The `CloseApproach` objects are generated in internal order, which isn't
-        guaranteed to be sorted meaningfully, although is often sorted by time.
+        The `CloseApproach` objects are generated in internal order,
+        which isn't guaranteed to be sorted meaningfully, although is often
+        sorted by time.
 
-        :param filters: A collection of filters capturing user-specified criteria.
+        :param filters: A collection of filters capturing user-specified
+        criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
             if all(f(approach) for f in filters):
                 yield approach
